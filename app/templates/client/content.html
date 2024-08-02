@@ -1,0 +1,30 @@
+{% extends "/client/layout.html" %}
+
+{% block title %}Topic Details{% endblock %}
+
+{% block content %}
+<section class="ftco-section bg-light">
+    <div class="container">
+        <h1 class="mb-4">{{ topic.topicTitle }}</h1>
+        <p>{{ topic.topicDescription | safe }}</p>
+
+        <!-- Navigation Buttons -->
+        <div class="d-flex justify-content-between mt-4">
+            {% if prev_topic %}
+            <a href=""
+                class="btn btn-secondary">Previous: {{ prev_topic['topicTitle'] }}</a>
+            {% else %}
+            <span></span>
+            {% endif %}
+
+            {% if next_topic %}
+            <a href=""
+                class="btn btn-secondary">Next: {{ next_topic['topicTitle'] }}</a>
+            {% else %}
+            <span></span>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

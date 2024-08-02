@@ -1,0 +1,21 @@
+<!-- {% extends "/client/layout.html" %}
+
+{% block title %}Curriculum{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Curriculum: {{ journey.name }}</h1>
+
+    {% for section in curriculum %}
+    <h2>{{ section.sectionTitle }}</h2>
+    <ul>
+        {% for topic in section.sectionTopics %}
+        <li><strong>Topic 1:</strong> {{ topic.additionalProp }}
+                                <a href="{{ url_for('get_sections_by_journey_id', journey_id=journey_id) }}" class="btn btn-primary mt-3">View
+                                    Sections</a>
+</li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+
+{% endblock %} -->

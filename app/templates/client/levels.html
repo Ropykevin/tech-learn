@@ -1,0 +1,28 @@
+{% extends "/client/layout.html" %}
+
+{% block title %}Levels{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>{{ section.sectionTitle }} Levels</h1>
+
+    <main>
+        {% if levels %}
+        {% for level in levels %}
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="card-title">Level {{ level.level }}</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text"><strong>Description:</strong> {{ level.sectionDescription }}</p>
+                <a href="{{ url_for('get_topics_by_level_id', section_id=section.id, level_id=level.id) }}"
+                    class="btn btn-primary float-right">Topics</a>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No levels available.</p>
+        {% endif %}
+    </main>
+</div>
+{% endblock %}

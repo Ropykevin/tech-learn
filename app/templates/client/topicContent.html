@@ -1,0 +1,104 @@
+{% extends "client/layout.html" %}
+
+{% block content %}
+<section class="ftco-section bg-light">
+    <div class="row justify-content-center pb-4">
+        <div class="col-md-12 heading-section text-center ftco-animate">
+            <span class="subheading">{{ journey.name }}</span>
+        </div>
+    </div>
+    <div class="container">
+
+        <div class="card mb-3">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img src="{{ journey.imageUrl }}" class="card-img-top" alt="{{ journey.name }}">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h6 class="card-title">You will get</h6>
+                        <ul>
+                            <li>Lifetime access</li>
+                            <li>Certificate of Completion</li>
+                        </ul>
+                        <h6>what you will learn</h6>
+                        <ul>
+                            <li>{{ journey.description }}</li>
+                        </ul>
+                        <h6 class="card-title">Requirements</h6>
+                        <ul>
+                            <li> {{ journey.requirements }} </li>
+                        </ul>
+                        <!-- <h5 class="card-title">Category</h5>
+                        <p class="card-text">{{ journey.category.categoryTitle }}</p>
+                        <p class="card-text">{{ journey.category.categoryDescription }}</p> -->
+                        <!-- <a href="{{ journey.videoUrl }}" class="btn btn-primary">Watch Video</a>
+                        <a href="{{ journey.streamUrl }}" class="btn btn-secondary">Join Stream</a> -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row justify-content-center pb-4">
+            <div class="col-md-12 heading-section text-center ftco-animate">
+                <span class="subheading">{{ journey.name }} sections</span>
+            </div>
+        </div>
+
+        {% if sections %}
+        {% for section in sections %}
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="card-title">{{ section.sectionTitle }}</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text"><strong>Description:</strong> {{ section.sectionDescription }}</p>
+                <p class="card-text"><strong>Test:</strong> {{ section.sectionTest }}</p>
+                <button class="btn btn-primary float-right" onclick="toggleTopics({{ section.id }})">+</button>
+                <div id="topics-{{ section.id }}" class="topics mt-3" style="display: none;">
+                    <ul>
+                        <h4>what you will learn</h4>
+                        {% for topic in section.topics %}
+                        <li>
+                            <a href="{{ url_for('topic_content', section_id=section.id, topic_id=topic.id) }}"
+                                onclick="markAsVisited(this, event);">{{ topic.topicTitle }}</a>
+
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No sections available.</p>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+    function toggleTopics(sectionId) {
+        const topicsDiv = document.getElementById(`topics-${sectionId}`);
+        topicsDiv.style.display = topicsDiv.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function markAsVisited(link, event) {
+        event.preventDefault(); // Prevent the default link behavior
+        link.classList.add('visited'); // Add the 'visited' class to the link
+        window.location.href = link.href; // Navigate to the URL
+    }
+</script>
+
+<style>
+    h6 {
+        color: #007bff;
+    }
+
+    .visited::after {
+        content: "✔ ";
+        float: right;
+        color: green;
+    }
+</style>
+{% endblock %}

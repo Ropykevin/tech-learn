@@ -1,0 +1,193 @@
+{% extends "/client/layout.html" %}
+
+{% block title %}Curriculum{% endblock %}
+
+{% block content %}
+<section class="ftco-section bg-light">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 d-none d-md-block" id="sidebar-wrapper">
+                <div id="sidebar" style="background: linear-gradient(90deg, #060808 0%, #f58b00 100%); color: #dee2e6;">
+                    <div class="sidebar-header d-flex justify-content-between align-items-center p-3">
+                        <h4>Topics</h4>
+                        <button class="btn btn-outline-secondary btn-sm d-none d-md-inline"
+                            id="toggle-sidebar">Toggle</button>
+                    </div>
+                    <ul class="list-unstyled components" id="sidebar-list">
+                        {% for topic in topics %}
+                        <li id="sidebar-item-{{ loop.index0 }}">
+                            <a href="javascript:void(0)" onclick="showTopic({{ loop.index0 }})">{{ topic.topicTitle
+                                }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div id="content-wrapper" class="col-md-9">
+                <h1 class="mb-4" id="topic-title"></h1>
+                <p id="topic-description"></p>
+
+                <!-- Navigation Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <button class="btn btn-primary" onclick="navigateToTopic('prev')">Previous</button>
+                    <button class="btn btn-primary" onclick="navigateToTopic('next')">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var topics = {{ topics | tojson | safe }};
+    var currentTopicIndex = {{ topics.index(topic) }};
+
+    function showTopic(topicIndex) {
+        if (topicIndex < 0 || topicIndex >= topics.length) {
+            return;
+        }
+        currentTopicIndex = topicIndex;
+
+        var topic = topics[topicIndex];
+        document.getElementById('topic-title').innerText = topic.topicTitle;
+        document.getElementById('topic-description').innerHTML = topic.topicDescription;
+
+        updateSidebarStatus(topicIndex);
+    }
+
+    function updateSidebarStatus(topicIndex) {
+        document.querySelectorAll('#sidebar-list li').forEach(function (item) {
+            item.classList.remove('active');
+            item.classList.remove('read');
+        });
+
+        var sidebarItem = document.getElementById('sidebar-item-' + topicIndex);
+        if (sidebarItem) {
+            sidebarItem.classList.add('active');
+            sidebarItem.classList.add('read');
+        }
+    }
+
+    function navigateToTopic(direction) {
+        var newIndex = direction === 'next' ? currentTopicIndex + 1 : currentTopicIndex - 1;
+        if (newIndex < 0 || newIndex >= topics.length) {
+            return;
+        }
+
+        document.getElementById('sidebar-item-' + currentTopicIndex).classList.add('read');
+
+        if (direction === 'next') {
+            document.getElementById('topic-description').innerHTML = 'Loading next topic...';
+        }
+
+        showTopic(newIndex);
+    }
+
+    document.getElementById('toggle-sidebar').addEventListener('click', function () {
+        var sidebarWrapper = document.getElementById('sidebar-wrapper');
+        sidebarWrapper.classList.toggle('collapsed');
+    });
+
+    showTopic(currentTopicIndex);
+</script>
+
+
+
+<style>
+    #sidebar {
+        background-color: #333;
+        height: 100vh;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        padding-top: 48px;
+        z-index: 1000;
+        overflow-x: hidden;
+        overflow-y: auto;
+        transition: width 0.3s;
+    }
+
+    #sidebar .components {
+        padding: 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    #sidebar .components li a {
+        padding: 10px 15px;
+        font-size: 1.1em;
+        display: block;
+        color: #dee2e6;
+        text-decoration: none;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    #sidebar .components li a:hover,
+    #sidebar .components li.active a {
+        background-color: #ffffff;
+        color: #ff5e00;
+    }
+
+    #sidebar .components li.read a {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    #sidebar .components li.read::after {
+        content: '✔';
+        /* Unicode checkmark character */
+        color: #28a745;
+        /* Match the color of the read text */
+        margin-right: 10px;
+        /* Space between the checkmark and the text */
+        font-size: 1.2em;
+        /* Adjust the size of the checkmark */
+        display: inline-block;
+    }
+
+    #sidebar-wrapper.collapsed #sidebar {
+        width: 80px;
+    }
+
+    #sidebar-wrapper.collapsed .sidebar-header h4 {
+        display: none;
+    }
+
+    #content-wrapper {
+        margin-left: 300px;
+        transition: margin-left 0.3s;
+    }
+
+    #content-wrapper.expanded {
+        margin-left: 100px;
+    }
+
+    @media (max-width: 767.98px) {
+        #sidebar-wrapper {
+            display: none;
+        }
+
+        #sidebar.show {
+            display: block;
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            background-color: white;
+            border-right: 1px solid #dee2e6;
+            overflow-y: auto;
+        }
+
+        #content-wrapper {
+            margin-left: 0;
+        }
+    }
+
+    .topic-description {
+        margin-top: 15px;
+    }
+</style>
+
+{% endblock %}

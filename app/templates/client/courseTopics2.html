@@ -1,0 +1,108 @@
+{% extends 'client/layout.html' %}
+
+{% block content %}
+<div class="page-loader">
+    <img src="/static/img/loader.gif" alt="Loading">
+</div>
+
+<!-- Parallax Starter -->
+<section class="pagetitle parallax parallax-image"
+    style="background-image: url('http://www.themepush.com/demo-calypso/wp-content/uploads/sites/5/2014/10/wheat-golden-field-fall-hd-wallpaper.jpg');">
+    <div class="wrapsection">
+        <div class="overlay" style="background: #303543; opacity: 0.4;"></div>
+        <div class="container">
+            <div class="parallax-content">
+                <div class="block2 text-center" style="color: #fff;">
+                    <h2>
+                        <span class="text2 big wow zoomIn" data-wow-delay="0.4s" data-wow-duration="2s">
+                            {% if journey %}
+                            Welcome to {{ journey.category.categoryTitle }} Programming
+                            {% else %}
+                            <p style="color: #5e0400; text-align: center; font-size: larger;">Journey title will appear
+                                here!!</p>
+                            {% endif %}
+                        </span>
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Content Here -->
+<section class="page-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p class="lead">
+                    {{ category.cate }}
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Accordions & Tabs -->
+<section id="startcontent">
+    <div class="container">
+        <div class="row page-content">
+            <div class="col-sm-2">
+                <!-- Empty column for layout spacing -->
+            </div>
+
+            <div class="col-md-8" style="margin: auto">
+                <!-- Begin accordion -->
+                {% if all_categories %}
+                {% for cat in all_categories %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion-0"
+                                href="#{{ cat.categorytitle | replace(' ', '_') }}" class="collapsed">
+                                {{ cat.categotyname }}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="{{ cat.categotyname | replace(' ', '_') }}" class="panel-collapse collapse">
+                        <div>
+                            <ul style="padding: 0;">
+                                {% if cat.id in catIds %}
+                                {% for topic in journey %}
+                                {% if cat.id == topic.categoryid %}
+                                <li class="list-group-item">
+                                    <a
+                                        href="/course/{{ cat.courseid }}/{{ topic.title | replace(' ', '-') }}/{{ topic.id }}">{{
+                                        topic.title }}</a>
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                                {% else %}
+                                <li>
+                                    <i class="fa fa-smile"></i>
+                                    <p style="color: #5e0400; text-align: center; font-size: larger;">
+                                        Sorry!! Topics for {{ cat.categotyname }} currently not uploaded.
+                                        <br> All topics under {{ cat.categotyname }} will be displayed here.
+                                    </p>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p style="color: #5e0400; text-align: center; font-size: larger;">
+                    All topics for {{ course.title }} Programming will be displayed here.
+                    Currently none is uploaded. Come back later!!
+                </p>
+                {% endif %}
+                <!-- End accordion -->
+            </div>
+
+            <div class="col-sm-2">
+                <!-- Empty column for layout spacing -->
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
